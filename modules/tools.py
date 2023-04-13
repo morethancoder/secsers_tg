@@ -9,7 +9,7 @@ from time import sleep,time
 import modules.db as db
 from modules.video import Video
 from modules.img import Img
-from pyrogram import enums, filters, client, types
+from pyrogram import enums, filters, client, types,errors
 from pyrogram.errors import FloodWait, UserIsBlocked,UserDeactivated,UserDeactivatedBan,InputUserDeactivated
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, Message
 # ? this file contains bunch of useful functions
@@ -21,9 +21,14 @@ import logging
 logging.basicConfig(filename='errors.log', level=logging.WARNING, 
                     format='%(asctime)s %(levelname)s: %(message)s')
 
-def get_random_string():
-    return str(uuid.uuid4())[:8]
 
+
+
+
+
+
+def get_random_string(length=8):
+    return str(uuid.uuid4())[:length]
 
 def get_message_params(object: dict) -> dict:
     """
@@ -38,20 +43,26 @@ def get_message_params(object: dict) -> dict:
     - `first_name` الاسم الاول للمرسل
     - `last_name`  الاسم الاخير للمرسل
     """
-    try:
-        message_id = object.message.id
-        chat_id = object.message.chat.id
-        username = object.message.chat.username
-        user_id = object.message.from_user.id
-        first_name = object.message.chat.first_name or ''
-        last_name = object.message.chat.last_name or ''
-    except:
+    if object.chat.id:
         message_id = object.id
         chat_id = object.chat.id
         username = object.from_user.username
         user_id = object.from_user.id
         first_name = object.from_user.first_name or ''
         last_name = object.from_user.last_name or ''
+
+    elif object.message.chat.id:
+
+        message_id = object.message.id
+        chat_id = object.message.chat.id
+        username = object.message.chat.username
+        user_id = object.message.from_user.id
+        first_name = object.message.chat.first_name or ''
+        last_name = object.message.chat.last_name or ''
+    else:
+        logging.error('niether call object nor message')
+        return
+
     return {
         "message_id": message_id,
         "chat_id": chat_id,
@@ -60,7 +71,6 @@ def get_message_params(object: dict) -> dict:
         "first_name": first_name,
         "last_name": last_name,
     }
-
 
 def get_commands(commands_data):
     """
@@ -75,7 +85,6 @@ def get_commands(commands_data):
         bot_command = types.BotCommand(item["command"], item["description"])
         commands.append(bot_command)
     return commands
-
 
 def msg_from_owner(object: dict, owner_id) -> bool:
     """
@@ -141,354 +150,8 @@ def download(urls: list, path: str, type: str, name=None) -> bool:
         return False
 
 
-def get_message_markup(selected: str, data):
-    """
-    انشاء قائمة من نوع شفاف للرسالة المختارة
-    """
-    try:
-        title = str
-        url = str
-        if selected == 'start':
-            title = data["refferal_button"]['start']['title']
-            url = data["refferal_button"]['start']['url']
-        elif selected == 'done':
-            title = data["refferal_button"]['done']['title']
-            url = data["refferal_button"]['done']['url']
-
-        markup = InlineKeyboardMarkup([[InlineKeyboardButton(title, url=url)]])
-
-        return markup
-
-    except:
-        return None
 
 
-def change_ownership(client, message, bot_language, data) -> bool:
-    """
-    change bot ownership
-    - returns `True` on success
-    """
-    try:
-        chat_id = message.chat.id
-        user_id = message.forward_from.id
-        first_name = message.forward_from.first_name
-        last_name = message.forward_from.last_name or ''
-        username = message.forward_from.username
-        is_bot = message.forward_from.is_bot
-        if is_bot:
-            raise Exception("User is bot")
-        else:
-            url = f"<a href='tg://user?id={user_id}'> {first_name} </a>"
-            text = bot_language['done']['set']
-            if '{url}' in text:
-                text = text.format(url=url)
-
-            data["owner"] = {
-                "id": user_id,
-                "username": username,
-                "first_name": first_name,
-                "last_name": last_name
-            }
-            client.send_message(
-                chat_id=chat_id,
-                text=text,
-
-            )
-            return True
-
-    except Exception as e:
-        chat_id = message.chat.id
-        # print(e)
-        text = bot_language['error']['set']
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-
-        )
-        return False
-
-
-def is_bot_admin(client, chat_id) -> bool:
-    """
-    checks if bot is admin in channel
-    --
-    returns `True` if bot is admin
-    """
-    chat_members = client.get_chat_members(chat_id)
-    # Iterate through the list of chat members
-    for member in chat_members:
-        if member.status == enums.ChatMemberStatus.ADMINISTRATOR and member.user.id == client.me.id:
-            return True
-    else:
-        return False
-
-def enable_refferal_messages(client,message,data,message_info=None) :
-    try:
-        chat_id = message.chat.id
-        if message_info:
-            button_title_requested = message.text
-            for button_data in data['routes']['designs_page']['buttons'][:-2]:
-                button_title = button_data['title']
-                if button_title == button_title_requested:
-                    data['refferal_messages'][button_data['id']] = message_info #{'chat_id':324525,'message_id':434553}
-                    text = f' تم اضافة الرسالة الختامية للتصميم {button_title} '
-                    client.send_message(
-                    chat_id=chat_id,
-                    text=text,
-                    reply_markup=ReplyKeyboardRemove()
-                    )
-                    return True
-
-        
-        if message.text == 'None':
-            data['refferal_messages'] = {}
-            text = 'تم حذف جميع الرسائل بعد اكتمال الطلب'
-            client.send_message(
-            chat_id=chat_id,
-            text=text,
-            )
-            return True
-        
-        message_id = message.id
-        text = 'ََ    اختر التصميم  '
-    
-        markup = ReplyKeyboardMarkup([])
-        for button_data in data['routes']['designs_page']['buttons'][:-2]:
-            markup.keyboard.append([KeyboardButton(text=button_data['title'])])
-
-        markup.resize_keyboard = True
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-            reply_markup=markup
-        )
-        return {
-            'chat_id':chat_id,
-            'message_id':message_id
-        }
-    except Exception as e:
-        e = traceback.format_exc()
-        logging.error(e)
-        chat_id = message.chat.id
-        text = 'حدث خطأ , تأكد من ارسال صحيح'
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-            reply_markup=ReplyKeyboardRemove()
-        )
-        return 
-
-
-def enable_follow_me(client,message,data) -> bool:
-    try:
-        chat_id = message.chat.id
-        text = ' تمت اضافة رابط المتابعة بنجاح'
-        if message.text == 'None':
-            data['follow'] = None
-            text = 'تم الغاء خدمة رابط المتابعة'
-            client.send_message(
-            chat_id=chat_id,
-            text=text,
-            )
-            return True
-        if not  message.text.startswith("http://") and not  message.text.startswith("https://"):
-            raise ValueError("Invalid URL format")
-        url = message.text
-        data['follow'] = url
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-        )
-        return True
-    except Exception as e:
-        chat_id = message.chat.id
-        text = 'حدث خطأ , تأكد من ارسال صحيح'
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-        )
-        return False
-
-def enable_must_sub(client, message, bot_language, data) -> bool:
-    """
-    activate must subscribe in tg channel to use bot
-    --
-    returns `True` on success
-    """
-
-    try:
-        chat_id = message.chat.id
-
-        if message.text == 'None':
-            data['sub'] = None
-            text = bot_language['disable']['sub']
-            client.send_message(
-                chat_id=chat_id,
-                text=text,
-            )
-            return True
-
-        channel_id = message.forward_from_chat.id
-        type = message.forward_from_chat.type
-        username = message.forward_from_chat.username
-
-        if username != None and type == enums.ChatType.CHANNEL and is_bot_admin(client, channel_id):
-
-            data["sub"] = {
-                "channel_id": channel_id,
-                "username": username
-            }
-            text = bot_language['enable']['sub']
-            client.send_message(
-                chat_id=chat_id,
-                text=text,
-            )
-            return True
-        else:
-            raise Exception()
-
-    except Exception as e:
-        chat_id = message.chat.id
-        # print(e)
-        text = bot_language['error']['sub']
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-        )
-        return False
-
-
-def enable_refferal_button(client,message,data,button_data=None) :
-    try:
-        chat_id = message.chat.id
-        if button_data:
-            if len(button_data) == 1:
-            #? 2 SECOND STEP
-                selected = button_data[0]
-                if message.text == 'None':
-                    data['refferal_button'][selected] = None
-                    text = f'تم الغاء تفعيل الرابط المضمن للرسالة  {selected} ✅'
-                    client.send_message(
-                    chat_id=chat_id,
-                    text=text,
-                    )
-                    return True
-                if not  message.text.startswith("http://") and not  message.text.startswith("https://"):
-                    raise ValueError("Invalid URL format")
-                
-                url = message.text
-                text = f' ارسل عنوان الزر المضمن للرسالة {selected}'
-                client.send_message(
-                    chat_id=chat_id,
-                    text=text,
-                    )
-                return [selected,url]
-            else:
-                #? 3 THIRD STEP
-                selected = button_data[0]
-                url = button_data[1]
-                title = message.text
-
-                data['refferal_button'][selected] = {
-                    'title':title,
-                    'url':url
-                }
-                text = f'تم اضافة الزر ( {title} ) الى الرسالة ({selected}) بنجاح ✅',
-                client.send_message(
-                    chat_id=chat_id,
-                    text=text,
-                    reply_markup=ReplyKeyboardRemove()
-                )
-                return True
-        #? 1 FIRST STEP : user selected which message
-        if message.text:
-            if message.text == 'start' or message.text == 'end':
-                selected_message = message.text
-                text = ' ارسل الرابط للزر المضمن \n\nيمكنك ارسال كلمة <code>None</code> لتعطيل الزر ',
-                client.send_message(
-                    chat_id=chat_id,
-                    text=text,
-                    reply_markup=ReplyKeyboardRemove()
-                )
-                return [selected_message]
-        
-         
-    except Exception as e:
-        e = traceback.format_exc()
-        logging.error(e)
-        chat_id = message.chat.id
-        text = 'حدث خطأ , تأكد من ارسال صحيح'
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-            reply_markup=ReplyKeyboardRemove()
-        )
-        return 
-  
-
-def choose_text_holder_markup(client, message, message_holder, bot_language):
-    """
-    prompt the user with the types of text messages he can change
-    as reply markup
-    """
-    try:
-        chat_id = message.chat.id
-        markup = ReplyKeyboardMarkup([[]],
-                                     resize_keyboard=True, one_time_keyboard=True, placeholder=message_holder['start'])
-        for holder in message_holder:
-            markup.keyboard.append([KeyboardButton(message_holder[holder])])
-
-        text = bot_language['query']['text_select']
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-            reply_markup=markup
-        )
-        return message.text
-    except Exception as e:
-        chat_id = message.chat.id
-        # print('enable_refferal_button', e)
-        text = bot_language['error']['text']
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-        )
-        return None
-
-
-def change_text(client, message, new_text, message_holder, bot_language, data) -> bool:
-    """
-    change text in data
-    --
-    """
-    try:
-        chat_id = message.chat.id
-        for holder in message_holder:
-            if message_holder[holder] == message.text:
-                holder_type = holder
-        # command = text_list[0]
-        # if len(holder_type) > 8:
-        #     raise Exception()
-
-        data['text'][holder_type] = new_text
-        text = bot_language['done']['text'].format(
-            setting=message_holder[holder_type], text=new_text)
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-            reply_markup=ReplyKeyboardRemove()
-        )
-        return True
-    except Exception as e:
-        chat_id = message.chat.id
-        # print('enable_refferal_button', e)
-        text = bot_language['error']['text']
-        client.send_message(
-            chat_id=chat_id,
-            text=text,
-            reply_markup=ReplyKeyboardRemove()
-        )
-        return False
 
 
 
