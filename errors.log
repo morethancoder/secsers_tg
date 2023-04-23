@@ -1,0 +1,109 @@
+2023-04-23 23:46:39,518:ERROR:Traceback (most recent call last):
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/app.py", line 130, in answer_callback
+    states_db.set_user_state(params['chat_id'],user_state)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/modules/db.py", line 274, in set_user_state
+    self.write_data()
+TypeError: write_data() missing 1 required positional argument: 'data'
+
+2023-04-23 23:58:47,068:ERROR:Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+Traceback (most recent call last):
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/dispatcher.py", line 240, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/app.py", line 115, in on_command
+    return await client.send_message(chat_id=params['chat_id'],text=text,reply_markup=markup)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/messages/send_message.py", line 126, in send_message
+    r = await self.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/advanced/invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ReplyMarkupInvalid: Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+2023-04-23 23:58:49,463:ERROR:Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+Traceback (most recent call last):
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/dispatcher.py", line 240, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/app.py", line 115, in on_command
+    return await client.send_message(chat_id=params['chat_id'],text=text,reply_markup=markup)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/messages/send_message.py", line 126, in send_message
+    r = await self.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/advanced/invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ReplyMarkupInvalid: Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+2023-04-23 23:58:49,822:ERROR:Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+Traceback (most recent call last):
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/dispatcher.py", line 240, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/app.py", line 115, in on_command
+    return await client.send_message(chat_id=params['chat_id'],text=text,reply_markup=markup)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/messages/send_message.py", line 126, in send_message
+    r = await self.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/advanced/invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ReplyMarkupInvalid: Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+2023-04-23 23:58:50,435:ERROR:Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+Traceback (most recent call last):
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/dispatcher.py", line 240, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/app.py", line 115, in on_command
+    return await client.send_message(chat_id=params['chat_id'],text=text,reply_markup=markup)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/messages/send_message.py", line 126, in send_message
+    r = await self.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/advanced/invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ReplyMarkupInvalid: Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+2023-04-24 00:00:14,519:ERROR:Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+Traceback (most recent call last):
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/dispatcher.py", line 240, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/app.py", line 115, in on_command
+    return await client.send_message(chat_id=params['chat_id'],text=text,reply_markup=markup)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/messages/send_message.py", line 126, in send_message
+    r = await self.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/advanced/invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ReplyMarkupInvalid: Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+2023-04-24 00:00:16,680:ERROR:Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")
+Traceback (most recent call last):
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/dispatcher.py", line 240, in handler_worker
+    await handler.callback(self.client, *args)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/app.py", line 115, in on_command
+    return await client.send_message(chat_id=params['chat_id'],text=text,reply_markup=markup)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/messages/send_message.py", line 126, in send_message
+    r = await self.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/methods/advanced/invoke.py", line 79, in invoke
+    r = await self.session.invoke(
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 389, in invoke
+    return await self.send(query, timeout=timeout)
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/session/session.py", line 357, in send
+    RPCError.raise_it(result, type(data))
+  File "/home/alitahseen/Projects/Telebots/secsers_tg/env/lib/python3.9/site-packages/pyrogram/errors/rpc_error.py", line 91, in raise_it
+    raise getattr(
+pyrogram.errors.exceptions.bad_request_400.ReplyMarkupInvalid: Telegram says: [400 REPLY_MARKUP_INVALID] - The provided reply markup is invalid (caused by "messages.SendMessage")

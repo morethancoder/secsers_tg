@@ -1,5 +1,8 @@
 
 import requests
+import urllib3
+
+urllib3.disable_warnings()
 
 class Api:
     """API client for Secsers.com"""

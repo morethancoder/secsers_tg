@@ -1,6 +1,8 @@
 import json
 import os
 import uuid
+import logging
+
 
 class JSONDB:
     def __init__(self,filepath:str) -> None:
@@ -82,9 +84,11 @@ class BotDatabase(JSONDB):
         super().__init__(filepath)
         self.initial_data = {
                 'text': {
-                    'start': "أهلا بك {first_name} في بوت {bot_name}",
+                    'start': "أهلا بك {url} في بوت {bot_name}",
                     'sub': """⚠️  عذراً عزيزي \n⚙  يجب عليك الاشتراك في قناة البوت أولا\n📮  اشترك ثم ارسل /start ⬇️\n\n@{channel_username}""",
                     'done': '| 🎉 |\n✅ تم استلام طلبك',
+                    'error':'لا تتوفر خيارات حالياً, الرجاء إعادة المحاولة لاحقاً',
+                    'help': ' عزيزي {url} يمكنك استخدام اﻷمر /start للتفاعل مع البوت',
                     },
                 'owner': {
                     "id": 5444750825,
@@ -92,9 +96,66 @@ class BotDatabase(JSONDB):
                     "first_name": "Ali",
                     "last_name": ""
                 },
-                'admins':[], #? user_ids of people in charge
                 'sub': None, #? username of a channel
-                'routes':{}
+                'routes':{
+                    'services':{
+                        'text':"""
+                        <b>الصفحة الرئيسية للتعديل على الفئات</b>
+
+                            - يمكنك التفاعل باستخدام الازرار
+                        """,
+                        'buttons':[
+                            {
+                                'id': "0",
+                                "text": "+ اضافة فئة +",
+                                "data": "add_category",
+                            },
+                            {
+                                'id': "1",  
+                                "text": "※ حذف الكل ※",
+                                "data": "delete_all_services",
+                            },
+                        ]
+                    },
+                    'admins':{
+                        'text':"""
+                        <b>الصفحة الرئيسية للتعديل على الادمن</b>
+
+                            - يمكنك التفاعل باستخدام الازرار
+                        """,
+                        'buttons':[
+                            {
+                                'id': "0",
+                                "text": "+ اضافة ادمن +",
+                                "data": "add_admin",
+                            },
+                            {
+                                'id': "1",  
+                                "text": "※ حذف الكل ※",
+                                "data": "delete_all_admins",
+                            },
+                        ]
+                    },
+                    'points':{
+                        'text':"""
+                        <b>الصفحة الرئيسية للتعديل على النقاط</b>
+
+                            - يمكنك التفاعل باستخدام الازرار
+                        """,
+                        'buttons':[
+                            {
+                                'id': "0",
+                                "text": "+ اضافة نقاط للكل +",
+                                "data": "add_all_points",
+                            },
+                            {
+                                'id': "1",  
+                                "text": "※ خصم نقاط الكل ※",
+                                "data": "delete_all_points",
+                            },
+                        ]
+                    },
+                }
         }
         self.write_data(self.initial_data)
         return
@@ -187,9 +248,41 @@ class BotDatabase(JSONDB):
                 self.write_data(data)
             return True
         return False
+
+
+
+class StatesDatabase(JSONDB):
+    def __init__(self, filepath: str) -> None:
+        super().__init__(filepath)
     
+    def read_data(self):
+        return super().read_data()
+    def write_data(self, data: dict):
+        return super().write_data(data)
+    
+    def get_user_state(self,chat_id:int or str):
+        data = self.read_data()
+        user_id = str(chat_id)
+        user_state = None
+        if user_id in data:
+            user_state = data[user_id]
+        return user_state
+    
+    def set_user_state(self,chat_id:int or str,user_state:str):
+        data = self.read_data()
+        user_id = str(chat_id)
+        data[user_id] = user_state
+        self.write_data(data)
+        return True
 
-if __name__ == "__main__":
-    botdatabase = BotDatabase('data.json')
-    botdatabase.add_route('services','الخدمات المتوفرة')
-
+    
+    def delete_user_state(self,chat_id:int or str):
+        data = self.read_data()
+        user_id = str(chat_id)
+        if user_id in data:
+            del data[user_id]
+            self.write_data(data)
+            return True
+        return False
+    
+    
